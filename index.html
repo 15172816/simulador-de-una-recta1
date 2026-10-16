@@ -3,33 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador Interactivo: Ecuación de la Recta</title>
+  <title>UAGro - Simulador de la Ecuación de la Recta</title>
   <style>
     :root {
-      --primary: #2563eb;
-      --secondary: #dc2626;
-      --bg: #f8fafc;
+      --uagro-blue: #1b365d;
+      --uagro-blue-dark: #10233f;
+      --uagro-gold: #c59b27;
+      --uagro-red: #c53030;
+      --bg: #f1f5f9;
       --panel-bg: #ffffff;
       --text: #1e293b;
     }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      margin: 0;
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-      color: #0f172a;
+    /* Encabezado Institucional UAGro */
+    .header-uagro {
+      background: linear-gradient(135deg, var(--uagro-blue-dark), var(--uagro-blue));
+      color: #ffffff;
+      width: 100%;
+      max-width: 1000px;
+      padding: 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      border-bottom: 4px solid var(--uagro-gold);
+      margin-bottom: 20px;
     }
 
+    .logo-uagro {
+      height: 85px;
+      width: auto;
+      object-fit: contain;
+      background: #ffffff;
+      padding: 4px;
+      border-radius: 50%;
+      border: 2px solid var(--uagro-gold);
+    }
+
+    .header-titles h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--uagro-gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .header-titles h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    /* Contenedor Principal */
     .container {
       display: flex;
       flex-wrap: wrap;
@@ -41,7 +83,7 @@
 
     .canvas-card {
       background: var(--panel-bg);
-      padding: 15px;
+      padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       display: flex;
@@ -50,7 +92,7 @@
     }
 
     canvas {
-      border: 1px solid #cbd5e1;
+      border: 2px solid #cbd5e1;
       border-radius: 8px;
       cursor: crosshair;
       background-color: #ffffff;
@@ -62,16 +104,17 @@
       border-radius: 12px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       flex: 1;
-      min-width: 300px;
+      min-width: 320px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 16px;
+      border-top: 4px solid var(--uagro-blue);
     }
 
     .control-group {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
     label {
@@ -79,80 +122,106 @@
       font-size: 0.9rem;
       display: flex;
       justify-content: space-between;
+      color: var(--uagro-blue);
     }
 
     input[type="range"] {
       width: 100%;
-      accent-color: var(--primary);
+      accent-color: var(--uagro-blue);
+      cursor: pointer;
     }
 
+    /* Caja de Ecuaciones */
     .equations-box {
-      background-color: #f1f5f9;
-      border-left: 4px solid var(--primary);
-      padding: 15px;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid var(--uagro-gold);
+      padding: 16px;
       border-radius: 0 8px 8px 0;
       margin-top: 10px;
     }
 
     .equation-title {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: #64748b;
+      color: var(--uagro-blue);
       margin-bottom: 4px;
       font-weight: 700;
     }
 
     .equation-value {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 1.1rem;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 1.15rem;
       font-weight: bold;
       color: #0f172a;
       margin-bottom: 12px;
+      background: #ffffff;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
     }
 
     .instructions {
       font-size: 0.85rem;
       color: #64748b;
-      margin-top: 5px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .header-uagro {
+        flex-direction: column;
+        text-align: center;
+      }
+      .logo-uagro {
+        height: 70px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Simulador de la Ecuación de la Recta</h1>
+  <!-- Encabezado con Logo y Colores UAGro -->
+  <header class="header-uagro">
+    <img src="logo.png" alt="Escudo UAGro" class="logo-uagro">
+    <div class="header-titles">
+      <h2>Universidad Autónoma de Guerrero</h2>
+      <h1>Simulador Interactivo: Ecuación de la Recta</h1>
+    </div>
+  </header>
 
   <div class="container">
     <div class="canvas-card">
-      <canvas id="gridCanvas" width="480" height="480"></canvas>
-      <p class="instructions">Haz clic y arrastra el punto rojo A(x₁, y₁) directamente en el plano.</p>
+      <canvas id="gridCanvas" width="460" height="460"></canvas>
+      <p class="instructions">Arrastra directamente el punto rojo <b>A(x₁, y₁)</b> dentro del plano cartesiano.</p>
     </div>
 
     <div class="controls-card">
       <div class="control-group">
         <label for="slopeSlider">
-          Pendiente (m): <span id="slopeValue" style="color:var(--primary)">1.50</span>
+          Pendiente (m): <span id="slopeValue" style="color:var(--uagro-blue)">1.50</span>
         </label>
         <input type="range" id="slopeSlider" min="-5" max="5" step="0.1" value="1.5">
       </div>
 
       <div class="control-group">
         <label for="x1Slider">
-          Coordenada x₁: <span id="x1Value" style="color:var(--secondary)">2.00</span>
+          Coordenada x₁: <span id="x1Value" style="color:var(--uagro-red)">2.00</span>
         </label>
         <input type="range" id="x1Slider" min="-8" max="8" step="0.5" value="2">
       </div>
 
       <div class="control-group">
         <label for="y1Slider">
-          Coordenada y₁: <span id="y1Value" style="color:var(--secondary)">1.00</span>
+          Coordenada y₁: <span id="y1Value" style="color:var(--uagro-red)">1.00</span>
         </label>
         <input type="range" id="y1Slider" min="-8" max="8" step="0.5" value="1">
       </div>
 
       <div class="equations-box">
         <div class="equation-title">Forma Punto-Pendiente</div>
-        <div class="equation-value" id="pointSlopeEq">y - y₁ = m(x - x₁)</div>
+        <div class="equation-value" id="pointSlopeEq">(y - y₁) = m(x - x₁)</div>
 
         <div class="equation-title">Forma Pendiente-Ordenada al Origen</div>
         <div class="equation-value" id="slopeInterceptEq">y = mx + b</div>
@@ -175,8 +244,7 @@
     const pointSlopeEqText = document.getElementById('pointSlopeEq');
     const slopeInterceptEqText = document.getElementById('slopeInterceptEq');
 
-    // Configuración de escala
-    const gridRange = 10; // De -10 a 10 en ambos ejes
+    const gridRange = 10;
     let width = canvas.width;
     let height = canvas.height;
     let scale = width / (2 * gridRange);
@@ -187,62 +255,45 @@
 
     let isDragging = false;
 
-    // Transformación de coordenadas cartesianas a pantalla
-    function toScreenX(x) {
-      return width / 2 + x * scale;
-    }
-
-    function toScreenY(y) {
-      return height / 2 - y * scale;
-    }
-
-    // Transformación de pantalla a coordenadas cartesianas
-    function toMathX(px) {
-      return (px - width / 2) / scale;
-    }
-
-    function toMathY(py) {
-      return (height / 2 - py) / scale;
-    }
+    function toScreenX(x) { return width / 2 + x * scale; }
+    function toScreenY(y) { return height / 2 - y * scale; }
+    function toMathX(px) { return (px - width / 2) / scale; }
+    function toMathY(py) { return (height / 2 - py) / scale; }
 
     function drawGrid() {
       ctx.clearRect(0, 0, width, height);
 
-      // Rejilla secundaria
+      // Rejilla Secundaria
       ctx.strokeStyle = '#e2e8f0';
       ctx.lineWidth = 1;
 
       for (let i = -gridRange; i <= gridRange; i++) {
-        // Líneas verticales
         ctx.beginPath();
         ctx.moveTo(toScreenX(i), 0);
         ctx.lineTo(toScreenX(i), height);
         ctx.stroke();
 
-        // Líneas horizontales
         ctx.beginPath();
         ctx.moveTo(0, toScreenY(i));
         ctx.lineTo(width, toScreenY(i));
         ctx.stroke();
       }
 
-      // Ejes principales
-      ctx.strokeStyle = '#475569';
+      // Ejes Principales
+      ctx.strokeStyle = '#1b365d';
       ctx.lineWidth = 2;
 
-      // Eje X
       ctx.beginPath();
       ctx.moveTo(0, toScreenY(0));
       ctx.lineTo(width, toScreenY(0));
       ctx.stroke();
 
-      // Eje Y
       ctx.beginPath();
       ctx.moveTo(toScreenX(0), 0);
       ctx.lineTo(toScreenX(0), height);
       ctx.stroke();
 
-      // Marcas y números
+      // Numeración del plano
       ctx.fillStyle = '#64748b';
       ctx.font = '10px sans-serif';
       for (let i = -gridRange; i <= gridRange; i++) {
@@ -254,32 +305,32 @@
     }
 
     function drawLineAndPoint() {
-      // Dibujar la recta
       const b = y1 - m * x1;
       const xStart = -gridRange;
       const yStart = m * xStart + b;
       const xEnd = gridRange;
       const yEnd = m * xEnd + b;
 
-      ctx.strokeStyle = '#2563eb';
-      ctx.lineWidth = 3;
+      // Dibujar la Recta (Azul UAGro)
+      ctx.strokeStyle = '#1b365d';
+      ctx.lineWidth = 3.5;
       ctx.beginPath();
       ctx.moveTo(toScreenX(xStart), toScreenY(yStart));
       ctx.lineTo(toScreenX(xEnd), toScreenY(yEnd));
       ctx.stroke();
 
-      // Dibujar el punto A(x1, y1)
-      ctx.fillStyle = '#dc2626';
+      // Dibujar Punto A(x1, y1)
+      ctx.fillStyle = '#c53030';
       ctx.beginPath();
-      ctx.arc(toScreenX(x1), toScreenY(y1), 7, 0, 2 * Math.PI);
+      ctx.arc(toScreenX(x1), toScreenY(y1), 8, 0, 2 * Math.PI);
       ctx.fill();
 
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Etiqueta del punto
-      ctx.fillStyle = '#0f172a';
+      // Etiqueta del Punto
+      ctx.fillStyle = '#10233f';
       ctx.font = 'bold 12px sans-serif';
       ctx.fillText(`A(${x1.toFixed(1)}, ${y1.toFixed(1)})`, toScreenX(x1) + 10, toScreenY(y1) - 10);
     }
@@ -287,17 +338,16 @@
     function updateEquations() {
       const b = y1 - m * x1;
 
-      // Actualizar valores de los textos
       slopeValueText.textContent = m.toFixed(2);
       x1ValueText.textContent = x1.toFixed(1);
       y1ValueText.textContent = y1.toFixed(1);
 
-      // Formato Punto-Pendiente: y - y1 = m(x - x1)
+      // Forma Punto-Pendiente
       let yPart = y1 >= 0 ? `(y - ${y1.toFixed(1)})` : `(y + ${Math.abs(y1).toFixed(1)})`;
       let xPart = x1 >= 0 ? `(x - ${x1.toFixed(1)})` : `(x + ${Math.abs(x1).toFixed(1)})`;
       pointSlopeEqText.textContent = `${yPart} = ${m.toFixed(2)}${xPart}`;
 
-      // Formato Pendiente-Ordenada: y = mx + b
+      // Forma Pendiente-Ordenada
       let bPart = b >= 0 ? ` + ${b.toFixed(2)}` : ` - ${Math.abs(b).toFixed(2)}`;
       slopeInterceptEqText.textContent = `y = ${m.toFixed(2)}x${bPart}`;
     }
@@ -308,30 +358,14 @@
       updateEquations();
     }
 
-    // Manejo de eventos de entrada
-    slopeSlider.addEventListener('input', (e) => {
-      m = parseFloat(e.target.value);
-      render();
-    });
+    slopeSlider.addEventListener('input', (e) => { m = parseFloat(e.target.value); render(); });
+    x1Slider.addEventListener('input', (e) => { x1 = parseFloat(e.target.value); render(); });
+    y1Slider.addEventListener('input', (e) => { y1 = parseFloat(e.target.value); render(); });
 
-    x1Slider.addEventListener('input', (e) => {
-      x1 = parseFloat(e.target.value);
-      render();
-    });
-
-    y1Slider.addEventListener('input', (e) => {
-      y1 = parseFloat(e.target.value);
-      render();
-    });
-
-    // Interacción arrastrando en el canvas
     function handlePointerDown(px, py) {
       const mx = toMathX(px);
       const my = toMathY(py);
-      const dist = Math.hypot(mx - x1, my - y1);
-      if (dist < 1.2) {
-        isDragging = true;
-      }
+      if (Math.hypot(mx - x1, my - y1) < 1.2) isDragging = true;
     }
 
     function handlePointerMove(px, py) {
@@ -356,7 +390,21 @@
 
     window.addEventListener('mouseup', () => { isDragging = false; });
 
-    // Render inicial
+    // Soporte táctil para smartphones/tabletas
+    canvas.addEventListener('touchstart', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      handlePointerDown(touch.clientX - rect.left, touch.clientY - rect.top);
+    }, {passive: true});
+
+    canvas.addEventListener('touchmove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      handlePointerMove(touch.clientX - rect.left, touch.clientY - rect.top);
+    }, {passive: true});
+
+    window.addEventListener('touchend', () => { isDragging = false; });
+
     render();
   </script>
 </body>
