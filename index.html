@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador Interactivo: Ecuación de la Recta</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #dc2626;
+      --bg: #f8fafc;
+      --panel-bg: #ffffff;
+      --text: #1e293b;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .canvas-card {
+      background: var(--panel-bg);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    canvas {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      cursor: crosshair;
+      background-color: #ffffff;
+    }
+
+    .controls-card {
+      background: var(--panel-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .equations-box {
+      background-color: #f1f5f9;
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 10px;
+    }
+
+    .equation-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .equation-value {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    .instructions {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Simulador de la Ecuación de la Recta</h1>
+
+  <div class="container">
+    <div class="canvas-card">
+      <canvas id="gridCanvas" width="480" height="480"></canvas>
+      <p class="instructions">Haz clic y arrastra el punto rojo A(x₁, y₁) directamente en el plano.</p>
+    </div>
+
+    <div class="controls-card">
+      <div class="control-group">
+        <label for="slopeSlider">
+          Pendiente (m): <span id="slopeValue" style="color:var(--primary)">1.50</span>
+        </label>
+        <input type="range" id="slopeSlider" min="-5" max="5" step="0.1" value="1.5">
+      </div>
+
+      <div class="control-group">
+        <label for="x1Slider">
+          Coordenada x₁: <span id="x1Value" style="color:var(--secondary)">2.00</span>
+        </label>
+        <input type="range" id="x1Slider" min="-8" max="8" step="0.5" value="2">
+      </div>
+
+      <div class="control-group">
+        <label for="y1Slider">
+          Coordenada y₁: <span id="y1Value" style="color:var(--secondary)">1.00</span>
+        </label>
+        <input type="range" id="y1Slider" min="-8" max="8" step="0.5" value="1">
+      </div>
+
+      <div class="equations-box">
+        <div class="equation-title">Forma Punto-Pendiente</div>
+        <div class="equation-value" id="pointSlopeEq">y - y₁ = m(x - x₁)</div>
+
+        <div class="equation-title">Forma Pendiente-Ordenada al Origen</div>
+        <div class="equation-value" id="slopeInterceptEq">y = mx + b</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gridCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const slopeSlider = document.getElementById('slopeSlider');
+    const x1Slider = document.getElementById('x1Slider');
+    const y1Slider = document.getElementById('y1Slider');
+
+    const slopeValueText = document.getElementById('slopeValue');
+    const x1ValueText = document.getElementById('x1Value');
+    const y1ValueText = document.getElementById('y1Value');
+
+    const pointSlopeEqText = document.getElementById('pointSlopeEq');
+    const slopeInterceptEqText = document.getElementById('slopeInterceptEq');
+
+    // Configuración de escala
+    const gridRange = 10; // De -10 a 10 en ambos ejes
+    let width = canvas.width;
+    let height = canvas.height;
+    let scale = width / (2 * gridRange);
+
+    let m = parseFloat(slopeSlider.value);
+    let x1 = parseFloat(x1Slider.value);
+    let y1 = parseFloat(y1Slider.value);
+
+    let isDragging = false;
+
+    // Transformación de coordenadas cartesianas a pantalla
+    function toScreenX(x) {
+      return width / 2 + x * scale;
+    }
+
+    function toScreenY(y) {
+      return height / 2 - y * scale;
+    }
+
+    // Transformación de pantalla a coordenadas cartesianas
+    function toMathX(px) {
+      return (px - width / 2) / scale;
+    }
+
+    function toMathY(py) {
+      return (height / 2 - py) / scale;
+    }
+
+    function drawGrid() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Rejilla secundaria
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 1;
+
+      for (let i = -gridRange; i <= gridRange; i++) {
+        // Líneas verticales
+        ctx.beginPath();
+        ctx.moveTo(toScreenX(i), 0);
+        ctx.lineTo(toScreenX(i), height);
+        ctx.stroke();
+
+        // Líneas horizontales
+        ctx.beginPath();
+        ctx.moveTo(0, toScreenY(i));
+        ctx.lineTo(width, toScreenY(i));
+        ctx.stroke();
+      }
+
+      // Ejes principales
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+
+      // Eje X
+      ctx.beginPath();
+      ctx.moveTo(0, toScreenY(0));
+      ctx.lineTo(width, toScreenY(0));
+      ctx.stroke();
+
+      // Eje Y
+      ctx.beginPath();
+      ctx.moveTo(toScreenX(0), 0);
+      ctx.lineTo(toScreenX(0), height);
+      ctx.stroke();
+
+      // Marcas y números
+      ctx.fillStyle = '#64748b';
+      ctx.font = '10px sans-serif';
+      for (let i = -gridRange; i <= gridRange; i++) {
+        if (i !== 0) {
+          ctx.fillText(i, toScreenX(i) - 6, toScreenY(0) + 14);
+          ctx.fillText(i, toScreenX(0) + 6, toScreenY(i) + 4);
+        }
+      }
+    }
+
+    function drawLineAndPoint() {
+      // Dibujar la recta
+      const b = y1 - m * x1;
+      const xStart = -gridRange;
+      const yStart = m * xStart + b;
+      const xEnd = gridRange;
+      const yEnd = m * xEnd + b;
+
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(toScreenX(xStart), toScreenY(yStart));
+      ctx.lineTo(toScreenX(xEnd), toScreenY(yEnd));
+      ctx.stroke();
+
+      // Dibujar el punto A(x1, y1)
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      ctx.arc(toScreenX(x1), toScreenY(y1), 7, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Etiqueta del punto
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(`A(${x1.toFixed(1)}, ${y1.toFixed(1)})`, toScreenX(x1) + 10, toScreenY(y1) - 10);
+    }
+
+    function updateEquations() {
+      const b = y1 - m * x1;
+
+      // Actualizar valores de los textos
+      slopeValueText.textContent = m.toFixed(2);
+      x1ValueText.textContent = x1.toFixed(1);
+      y1ValueText.textContent = y1.toFixed(1);
+
+      // Formato Punto-Pendiente: y - y1 = m(x - x1)
+      let yPart = y1 >= 0 ? `(y - ${y1.toFixed(1)})` : `(y + ${Math.abs(y1).toFixed(1)})`;
+      let xPart = x1 >= 0 ? `(x - ${x1.toFixed(1)})` : `(x + ${Math.abs(x1).toFixed(1)})`;
+      pointSlopeEqText.textContent = `${yPart} = ${m.toFixed(2)}${xPart}`;
+
+      // Formato Pendiente-Ordenada: y = mx + b
+      let bPart = b >= 0 ? ` + ${b.toFixed(2)}` : ` - ${Math.abs(b).toFixed(2)}`;
+      slopeInterceptEqText.textContent = `y = ${m.toFixed(2)}x${bPart}`;
+    }
+
+    function render() {
+      drawGrid();
+      drawLineAndPoint();
+      updateEquations();
+    }
+
+    // Manejo de eventos de entrada
+    slopeSlider.addEventListener('input', (e) => {
+      m = parseFloat(e.target.value);
+      render();
+    });
+
+    x1Slider.addEventListener('input', (e) => {
+      x1 = parseFloat(e.target.value);
+      render();
+    });
+
+    y1Slider.addEventListener('input', (e) => {
+      y1 = parseFloat(e.target.value);
+      render();
+    });
+
+    // Interacción arrastrando en el canvas
+    function handlePointerDown(px, py) {
+      const mx = toMathX(px);
+      const my = toMathY(py);
+      const dist = Math.hypot(mx - x1, my - y1);
+      if (dist < 1.2) {
+        isDragging = true;
+      }
+    }
+
+    function handlePointerMove(px, py) {
+      if (isDragging) {
+        x1 = Math.max(-gridRange, Math.min(gridRange, toMathX(px)));
+        y1 = Math.max(-gridRange, Math.min(gridRange, toMathY(py)));
+        x1Slider.value = x1;
+        y1Slider.value = y1;
+        render();
+      }
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      handlePointerDown(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      handlePointerMove(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    window.addEventListener('mouseup', () => { isDragging = false; });
+
+    // Render inicial
+    render();
+  </script>
+</body>
+</html>
