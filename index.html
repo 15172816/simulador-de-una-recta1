@@ -260,7 +260,8 @@
 
   <!-- Encabezado con Logo y Colores UAGro -->
   <header class="header-uagro">
-    <img src="uagro-logo.png" alt="Escudo UAGro" class="logo-uagro">
+    <!-- CORREGIDO AQUÍ: Ahora apunta a logo.png -->
+    <img src="logo.png" alt="Escudo UAGro" class="logo-uagro">
     <div class="header-titles">
       <h2>Universidad Autónoma de Guerrero</h2>
       <h1>Simulador Interactivo: Ecuación de la Recta</h1>
@@ -556,7 +557,6 @@
         const touch = e.touches[0];
         handlePointerDown(touch.clientX - rect.left, touch.clientY - rect.top);
       } else if (e.touches.length === 2) {
-        // Guardar distancia inicial entre dos dedos para pellizco
         initialTouchDist = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
