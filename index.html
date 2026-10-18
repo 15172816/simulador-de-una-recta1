@@ -100,7 +100,7 @@
       position: relative;
     }
 
-    /* Barra de Controles de Zoom sobre el Canvas */
+    /* Barra de Controles de Zoom */
     .zoom-toolbar {
       display: flex;
       align-items: center;
@@ -177,7 +177,7 @@
       cursor: pointer;
     }
 
-    /* Caja de Ecuaciones */
+    /* Caja de Ecuaciones y Tabla */
     .equations-box {
       background-color: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -238,6 +238,44 @@
       height: 15px;
     }
 
+    /* Estilos de la Tabla de Valores */
+    .values-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      background: #ffffff;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+    }
+
+    .values-table th {
+      background-color: var(--uagro-blue);
+      color: #ffffff;
+      padding: 6px 8px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .values-table td {
+      padding: 6px 8px;
+      text-align: center;
+      border-bottom: 1px solid #e2e8f0;
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+
+    .table-note {
+      font-size: 0.78rem;
+      color: var(--uagro-blue-dark);
+      margin-top: 6px;
+      font-style: italic;
+      background: #fef3c7;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #fde68a;
+    }
+
     .instructions {
       font-size: 0.85rem;
       color: #64748b;
@@ -260,8 +298,7 @@
 
   <!-- Encabezado con Logo y Colores UAGro -->
   <header class="header-uagro">
-    <!-- CORREGIDO AQUÍ: Ahora apunta a logo.png -->
-    <img src="logo.png" alt="Escudo UAGro" class="logo-uagro">
+    <img src="uagro-logo.png" alt="Escudo UAGro" class="logo-uagro">
     <div class="header-titles">
       <h2>Universidad Autónoma de Guerrero</h2>
       <h1>Simulador Interactivo: Ecuación de la Recta</h1>
@@ -271,7 +308,6 @@
 
   <div class="container">
     <div class="canvas-card">
-      <!-- Toolbar con Botones de Zoom y Escala -->
       <div class="zoom-toolbar">
         <button id="zoomOutBtn" class="zoom-btn" title="Alejar plano">🔍 -</button>
         <span id="zoomLevelText" class="zoom-info">Ejes: ±10</span>
@@ -309,7 +345,7 @@
         <div class="equation-title">Forma Punto-Pendiente</div>
         <div class="equation-value" id="pointSlopeEq">(y - y₁) = m(x - x₁)</div>
 
-        <!-- Encabezado con Casilla para Mostrar/Ocultar -->
+        <!-- Encabezado Forma Pendiente-Ordenada -->
         <div class="equation-header">
           <div class="equation-title">Forma Pendiente-Ordenada</div>
           <label class="toggle-label">
@@ -317,9 +353,30 @@
             Mostrar
           </label>
         </div>
-
-        <!-- Oculta por defecto -->
         <div class="equation-value" id="slopeInterceptEq" style="display: none;">y = mx + b</div>
+
+        <!-- Encabezado Tabla de Valores -->
+        <div class="equation-header">
+          <div class="equation-title">Tabla de Valores (x, y)</div>
+          <label class="toggle-label">
+            <input type="checkbox" id="toggleTable">
+            Mostrar Tabla
+          </label>
+        </div>
+
+        <div id="tableContainer" style="display: none;">
+          <table class="values-table">
+            <thead>
+              <tr>
+                <th>x</th>
+                <th>y</th>
+                <th>Cambio (Δy)</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+          <p class="table-note" id="tableNote"></p>
+        </div>
       </div>
     </div>
   </div>
@@ -340,12 +397,17 @@
     const slopeInterceptEqText = document.getElementById('slopeInterceptEq');
     const toggleSlopeIntercept = document.getElementById('toggleSlopeIntercept');
 
+    const toggleTable = document.getElementById('toggleTable');
+    const tableContainer = document.getElementById('tableContainer');
+    const tableBody = document.getElementById('tableBody');
+    const tableNote = document.getElementById('tableNote');
+
     const zoomInBtn = document.getElementById('zoomInBtn');
     const zoomOutBtn = document.getElementById('zoomOutBtn');
     const resetZoomBtn = document.getElementById('resetZoomBtn');
     const zoomLevelText = document.getElementById('zoomLevelText');
 
-    let gridRange = 10; // Rango del plano de -gridRange a +gridRange
+    let gridRange = 10;
     let width = canvas.width;
     let height = canvas.height;
     let scale = width / (2 * gridRange);
@@ -357,51 +419,39 @@
     let isDragging = false;
     let initialTouchDist = null;
 
-    // Actualizar factor de escala del plano
     function updateScale() {
       scale = width / (2 * gridRange);
       zoomLevelText.textContent = `Ejes: ±${gridRange}`;
     }
 
-    // Funciones de Zoom
     function zoomIn() {
-      if (gridRange > 4) {
-        gridRange -= 2;
-        updateScale();
-        render();
-      }
+      if (gridRange > 4) { gridRange -= 2; updateScale(); render(); }
     }
 
     function zoomOut() {
-      if (gridRange < 40) {
-        gridRange += 2;
-        updateScale();
-        render();
-      }
+      if (gridRange < 40) { gridRange += 2; updateScale(); render(); }
     }
 
     function resetZoom() {
-      gridRange = 10;
-      updateScale();
-      render();
+      gridRange = 10; updateScale(); render();
     }
 
     zoomInBtn.addEventListener('click', zoomIn);
     zoomOutBtn.addEventListener('click', zoomOut);
     resetZoomBtn.addEventListener('click', resetZoom);
 
-    // Zoom con la rueda del ratón sobre el Canvas
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault();
-      if (e.deltaY < 0) {
-        zoomIn();
-      } else {
-        zoomOut();
-      }
+      if (e.deltaY < 0) zoomIn(); else zoomOut();
     }, { passive: false });
 
     toggleSlopeIntercept.addEventListener('change', (e) => {
       slopeInterceptEqText.style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    toggleTable.addEventListener('change', (e) => {
+      tableContainer.style.display = e.target.checked ? 'block' : 'none';
+      if (e.target.checked) updateTable();
     });
 
     function toScreenX(x) { return width / 2 + x * scale; }
@@ -409,7 +459,6 @@
     function toMathX(px) { return (px - width / 2) / scale; }
     function toMathY(py) { return (height / 2 - py) / scale; }
 
-    // Calcular paso dinámico según el rango visible
     function getGridStep() {
       if (gridRange <= 12) return 1;
       if (gridRange <= 24) return 2;
@@ -418,10 +467,8 @@
 
     function drawGrid() {
       ctx.clearRect(0, 0, width, height);
-
       const step = getGridStep();
 
-      // Rejilla Secundaria
       ctx.strokeStyle = '#e2e8f0';
       ctx.lineWidth = 1;
 
@@ -437,7 +484,6 @@
         ctx.stroke();
       }
 
-      // Ejes Principales
       ctx.strokeStyle = '#1b365d';
       ctx.lineWidth = 2;
 
@@ -451,7 +497,6 @@
       ctx.lineTo(toScreenX(0), height);
       ctx.stroke();
 
-      // Numeración adaptativa del plano
       ctx.fillStyle = '#64748b';
       ctx.font = '10px sans-serif';
       for (let i = -gridRange; i <= gridRange; i += step) {
@@ -469,7 +514,6 @@
       const xEnd = gridRange;
       const yEnd = m * xEnd + b;
 
-      // Dibujar la Recta
       ctx.strokeStyle = '#1b365d';
       ctx.lineWidth = 3.5;
       ctx.beginPath();
@@ -477,7 +521,6 @@
       ctx.lineTo(toScreenX(xEnd), toScreenY(yEnd));
       ctx.stroke();
 
-      // Dibujar Punto A(x1, y1) si está dentro o cerca del área visible
       ctx.fillStyle = '#c53030';
       ctx.beginPath();
       ctx.arc(toScreenX(x1), toScreenY(y1), 8, 0, 2 * Math.PI);
@@ -487,7 +530,6 @@
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Etiqueta del Punto
       ctx.fillStyle = '#10233f';
       ctx.font = 'bold 12px sans-serif';
       ctx.fillText(`A(${x1.toFixed(1)}, ${y1.toFixed(1)})`, toScreenX(x1) + 10, toScreenY(y1) - 10);
@@ -500,20 +542,53 @@
       x1ValueText.textContent = x1.toFixed(1);
       y1ValueText.textContent = y1.toFixed(1);
 
-      // Forma Punto-Pendiente
       let yPart = y1 >= 0 ? `(y - ${y1.toFixed(1)})` : `(y + ${Math.abs(y1).toFixed(1)})`;
       let xPart = x1 >= 0 ? `(x - ${x1.toFixed(1)})` : `(x + ${Math.abs(x1).toFixed(1)})`;
       pointSlopeEqText.textContent = `${yPart} = ${m.toFixed(2)}${xPart}`;
 
-      // Forma Pendiente-Ordenada
       let bPart = b >= 0 ? ` + ${b.toFixed(2)}` : ` - ${Math.abs(b).toFixed(2)}`;
       slopeInterceptEqText.textContent = `y = ${m.toFixed(2)}x${bPart}`;
+    }
+
+    // Generar y actualizar la Tabla de Valores en tiempo real
+    function updateTable() {
+      if (!toggleTable.checked) return;
+
+      const b = y1 - m * x1;
+      tableBody.innerHTML = '';
+
+      // Generar 5 puntos enteros centrados alrededor del entero más cercano a x1
+      const startX = Math.round(x1) - 2;
+
+      for (let i = 0; i < 5; i++) {
+        const currentX = startX + i;
+        const currentY = m * currentX + b;
+        const tr = document.createElement('tr');
+
+        // Resaltar la fila si coincide con el punto A(x1, y1)
+        if (Math.abs(currentX - x1) < 0.1) {
+          tr.style.backgroundColor = '#fef3c7';
+          tr.style.fontWeight = 'bold';
+        }
+
+        const deltaYText = i === 0 ? '-' : (m >= 0 ? `+${m.toFixed(2)}` : `${m.toFixed(2)}`);
+
+        tr.innerHTML = `
+          <td>${currentX}</td>
+          <td>${currentY.toFixed(2)}</td>
+          <td style="color: ${m >= 0 ? '#15803d' : '#b91c1c'}; font-weight: bold;">${deltaYText}</td>
+        `;
+        tableBody.appendChild(tr);
+      }
+
+      tableNote.textContent = `📌 Regla: Al aumentar x en +1, el valor de y cambia exactamente en m = ${m.toFixed(2)}.`;
     }
 
     function render() {
       drawGrid();
       drawLineAndPoint();
       updateEquations();
+      updateTable();
     }
 
     slopeSlider.addEventListener('input', (e) => { m = parseFloat(e.target.value); render(); });
@@ -523,7 +598,6 @@
     function handlePointerDown(px, py) {
       const mx = toMathX(px);
       const my = toMathY(py);
-      // Ajustar tolerancia de selección de acuerdo a la escala
       const clickTolerance = gridRange * 0.12;
       if (Math.hypot(mx - x1, my - y1) < clickTolerance) isDragging = true;
     }
@@ -550,7 +624,6 @@
 
     window.addEventListener('mouseup', () => { isDragging = false; });
 
-    // Eventos táctiles móviles (Arrastrar + Pellizco para Zoom)
     canvas.addEventListener('touchstart', (e) => {
       const rect = canvas.getBoundingClientRect();
       if (e.touches.length === 1) {
