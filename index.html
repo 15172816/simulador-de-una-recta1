@@ -825,6 +825,18 @@
       isDragging = false; 
       initialTouchDist = null;
     });
+    function toggleAnswer(id) {
+  const answerBox = document.getElementById(id);
+  const button = answerBox.previousElementSibling;
+  
+  if (answerBox.classList.contains('hidden')) {
+    answerBox.classList.remove('hidden');
+    button.textContent = '🙈 Ocultar respuesta';
+  } else {
+    answerBox.classList.add('hidden');
+    button.textContent = '👁️ Mostrar respuesta';
+  }
+}
 
     updateScale();
     render();
