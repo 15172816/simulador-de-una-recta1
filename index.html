@@ -291,99 +291,6 @@
       .logo-uagro {
         height: 70px;
       }
-      /* ESTILOS DEL MÓDULO DE AUTOEVALUACIÓN UAGRO */
-.evaluacion-section {
-  margin-top: 30px;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  border: 1px solid #e0e0e0;
-  font-family: Arial, sans-serif;
-}
-
-.evaluacion-section h2 {
-  color: #002b49; /* Azul institucional UAGro */
-  font-size: 1.3rem;
-  margin-bottom: 8px;
-}
-
-.evaluacion-desc {
-  font-size: 0.95rem;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.questions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 15px;
-}
-
-.question-card {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 16px;
-  border: 1px solid #dcdcdc;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.badge {
-  align-self: flex-start;
-  background-color: #002b49;
-  color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: bold;
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-.question-text {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 12px;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.btn-toggle-answer {
-  background-color: #9d2235; /* Rojo UAGro */
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: bold;
-  transition: background-color 0.2s ease;
-  margin-bottom: 8px;
-}
-
-.btn-toggle-answer:hover {
-  background-color: #7b1a29;
-}
-
-.answer-box {
-  background-color: #eef6fc;
-  border-left: 4px solid #002b49;
-  padding: 10px;
-  border-radius: 4px;
-  margin-top: 10px;
-  font-size: 0.88rem;
-  color: #222;
-  line-height: 1.4;
-}
-
-.answer-box p {
-  margin: 4px 0;
-}
-
-.hidden {
-  display: none;
-}
     }
   </style>
 </head>
@@ -473,80 +380,7 @@
       </div>
     </div>
   </div>
-<!-- MÓDULO DE AUTOEVALUACIÓN Y COMPROBACIÓN NEM -->
-<section class="evaluacion-section">
-  <h2>Cuestionario de Comprobación de Aprendizaje (NEM)</h2>
-  <p class="evaluacion-desc">
-    Pon a prueba tu comprensión sobre el comportamiento gráfico-algebraico de la recta. Lee cada caso y presiona el botón para verificar tu respuesta.
-  </p>
 
-  <div class="questions-grid">
-    <!-- Pregunta 1 -->
-    <div class="question-card">
-      <span class="badge">Caso 1</span>
-      <p class="question-text">
-        Si la pendiente es negativa ($m = -1$) y la ordenada al origen es $b = -3$, ¿cuál es su ecuación pendiente-ordenada y qué comportamiento presenta en la gráfica?
-      </p>
-      <button class="btn-toggle-answer" onclick="toggleAnswer('ans1')">👁️ Mostrar respuesta</button>
-      <div id="ans1" class="answer-box hidden">
-        <p><strong>Ecuación:</strong> $y = -x - 3$ (o $y = -1x - 3$).</p>
-        <p><strong>Comportamiento gráfico:</strong> La recta es decreciente (se inclina hacia la izquierda al subir) y cruza el eje $Y$ exactamente en el punto $(0, -3)$.</p>
-      </div>
-    </div>
-
-    <!-- Pregunta 2 -->
-    <div class="question-card">
-      <span class="badge">Caso 2</span>
-      <p class="question-text">
-        Si la pendiente es positiva ($m = 2$) y pasa exactamente por el origen ($b = 0$), ¿cuál es su representación algebraica y gráfica?
-      </p>
-      <button class="btn-toggle-answer" onclick="toggleAnswer('ans2')">👁️ Mostrar respuesta</button>
-      <div id="ans2" class="answer-box hidden">
-        <p><strong>Ecuación:</strong> $y = 2x$.</p>
-        <p><strong>Comportamiento gráfico:</strong> La recta es creciente (se inclina hacia la derecha al subir), intercepta el origen $(0,0)$ y por cada unidad que avanza en $x$, la variable $y$ sube $2$ unidades.</p>
-      </div>
-    </div>
-
-    <!-- Pregunta 3 -->
-    <div class="question-card">
-      <span class="badge">Caso 3</span>
-      <p class="question-text">
-        Si la pendiente es nula ($m = 0$) y la ordenada al origen es $b = 4$, ¿cómo se representa la recta en el plano y cuál es su ecuación?
-      </p>
-      <button class="btn-toggle-answer" onclick="toggleAnswer('ans3')">👁️ Mostrar respuesta</button>
-      <div id="ans3" class="answer-box hidden">
-        <p><strong>Ecuación:</strong> $y = 4$ (debido a que $y = 0x + 4$).</p>
-        <p><strong>Comportamiento gráfico:</strong> Es una recta completamente horizontal a una altura de $y = 4$. No tiene inclinación y el valor de $y$ se mantiene constante para cualquier valor de $x$.</p>
-      </div>
-    </div>
-
-    <!-- Pregunta 4 -->
-    <div class="question-card">
-      <span class="badge">Caso 4</span>
-      <p class="question-text">
-        Dado el punto $A(2, 3)$ y una pendiente $m = -2$, ¿cuál es la expresión en la forma punto-pendiente $(y - y_1) = m(x - x_1)$?
-      </p>
-      <button class="btn-toggle-answer" onclick="toggleAnswer('ans4')">👁️ Mostrar respuesta</button>
-      <div id="ans4" class="answer-box hidden">
-        <p><strong>Ecuación:</strong> $(y - 3) = -2(x - 2)$.</p>
-        <p><strong>Explicación:</strong> Se sustituyen directamente las coordenadas $x_1 = 2$, $y_1 = 3$ y el valor de la pendiente $m = -2$ en la fórmula estándar sin despejar.</p>
-      </div>
-    </div>
-
-    <!-- Pregunta 5 -->
-    <div class="question-card">
-      <span class="badge">Caso 5</span>
-      <p class="question-text">
-        En la tabla de valores, si observas que al avanzar $x$ de $1$ en $1$, la columna muestra un cambio constante $\Delta y = -3$, ¿cuánto vale la pendiente $m$?
-      </p>
-      <button class="btn-toggle-answer" onclick="toggleAnswer('ans5')">👁️ Mostrar respuesta</button>
-      <div id="ans5" class="answer-box hidden">
-        <p><strong>Valor de la pendiente:</strong> $m = -3$.</p>
-        <p><strong>Explicación:</strong> La tasa de cambio constante $\Delta y / \Delta x$ es igual a $-3 / 1 = -3$. Esto confirma que la pendiente representa numéricamente el cambio vertical en la tabla.</p>
-      </div>
-    </div>
-  </div>
-</section>
   <script>
     const canvas = document.getElementById('gridCanvas');
     const ctx = canvas.getContext('2d');
@@ -825,18 +659,6 @@
       isDragging = false; 
       initialTouchDist = null;
     });
-    function toggleAnswer(id) {
-  const answerBox = document.getElementById(id);
-  const button = answerBox.previousElementSibling;
-  
-  if (answerBox.classList.contains('hidden')) {
-    answerBox.classList.remove('hidden');
-    button.textContent = '🙈 Ocultar respuesta';
-  } else {
-    answerBox.classList.add('hidden');
-    button.textContent = '👁️ Mostrar respuesta';
-  }
-}
 
     updateScale();
     render();
