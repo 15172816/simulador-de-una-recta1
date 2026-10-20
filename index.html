@@ -291,6 +291,99 @@
       .logo-uagro {
         height: 70px;
       }
+      /* ESTILOS DEL MÓDULO DE AUTOEVALUACIÓN UAGRO */
+.evaluacion-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  font-family: Arial, sans-serif;
+}
+
+.evaluacion-section h2 {
+  color: #002b49; /* Azul institucional UAGro */
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.evaluacion-desc {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.questions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.question-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #dcdcdc;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.badge {
+  align-self: flex-start;
+  background-color: #002b49;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.question-text {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.btn-toggle-answer {
+  background-color: #9d2235; /* Rojo UAGro */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.btn-toggle-answer:hover {
+  background-color: #7b1a29;
+}
+
+.answer-box {
+  background-color: #eef6fc;
+  border-left: 4px solid #002b49;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: #222;
+  line-height: 1.4;
+}
+
+.answer-box p {
+  margin: 4px 0;
+}
+
+.hidden {
+  display: none;
+}
     }
   </style>
 </head>
