@@ -283,6 +283,139 @@
       text-align: center;
     }
 
+    /* ====================================================== */
+    /* ESTILOS DEL MÓDULO DE AUTOEVALUACIÓN (NEM / UAGRO)    */
+    /* ====================================================== */
+    .evaluacion-card {
+      background: var(--panel-bg);
+      width: 100%;
+      max-width: 1000px;
+      margin-top: 25px;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      border-top: 4px solid var(--uagro-gold);
+    }
+
+    .evaluacion-header {
+      margin-bottom: 20px;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 12px;
+    }
+
+    .evaluacion-header h2 {
+      color: var(--uagro-blue);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .evaluacion-header p {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .questions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 18px;
+    }
+
+    .question-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .question-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .badge {
+      align-self: flex-start;
+      background-color: var(--uagro-blue);
+      color: var(--uagro-gold);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.92rem;
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+
+    .btn-toggle-answer {
+      background-color: var(--uagro-red);
+      color: #ffffff;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn-toggle-answer:hover {
+      background-color: #9b2c2c;
+    }
+
+    .btn-toggle-answer:active {
+      transform: scale(0.98);
+    }
+
+    .answer-box {
+      background-color: #ffffff;
+      border-left: 4px solid var(--uagro-gold);
+      border-right: 1px solid #e2e8f0;
+      border-top: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px;
+      border-radius: 0 6px 6px 0;
+      margin-top: 12px;
+      font-size: 0.88rem;
+      color: #1e293b;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .answer-box p {
+      margin-bottom: 6px;
+    }
+
+    .answer-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     @media (max-width: 600px) {
       .header-uagro {
         flex-direction: column;
@@ -290,6 +423,9 @@
       }
       .logo-uagro {
         height: 70px;
+      }
+      .evaluacion-card {
+        padding: 16px;
       }
     }
   </style>
@@ -380,6 +516,91 @@
       </div>
     </div>
   </div>
+
+  <!-- SECCIÓN DE AUTOEVALUACIÓN Y COMPROBACIÓN DE APRENDIZAJE -->
+  <section class="evaluacion-card">
+    <div class="evaluacion-header">
+      <h2>🧠 Comprobación de Aprendizaje</h2>
+      <p>Analiza cada caso práctico, deduce la respuesta en tu libreta o ajústala en el simulador y haz clic para verificar tus conocimientos.</p>
+    </div>
+
+    <div class="questions-grid">
+      <!-- Pregunta 1 -->
+      <div class="question-card">
+        <span class="badge">Caso 1 • Pendiente Negativa</span>
+        <p class="question-text">
+          Si la pendiente es <b>m = -1</b> y la ordenada al origen es <b>b = -3</b>, ¿cómo se expresa su ecuación pendiente-ordenada y cuál es su comportamiento gráfico?
+        </p>
+        <button class="btn-toggle-answer" onclick="toggleAnswer('ans1')">
+          <span>👁️ Ver Respuesta</span>
+        </button>
+        <div id="ans1" class="answer-box hidden">
+          <p><b>Ecuación:</b> <code style="color:var(--uagro-blue)">y = -x - 3</code></p>
+          <p><b>Comportamiento:</b> La recta es <i>decreciente</i> (se inclina hacia la izquierda al subir) y cruza el eje Y exactamente en el punto (0, -3).</p>
+        </div>
+      </div>
+
+      <!-- Pregunta 2 -->
+      <div class="question-card">
+        <span class="badge">Caso 2 • Pasa por el Origen</span>
+        <p class="question-text">
+          Si la pendiente es positiva <b>m = 2</b> y la recta pasa exactamente por el origen (<b>b = 0</b>), ¿cuál es su representación algebraica?
+        </p>
+        <button class="btn-toggle-answer" onclick="toggleAnswer('ans2')">
+          <span>👁️ Ver Respuesta</span>
+        </button>
+        <div id="ans2" class="answer-box hidden">
+          <p><b>Ecuación:</b> <code style="color:var(--uagro-blue)">y = 2x</code></p>
+          <p><b>Comportamiento:</b> La recta es <i>creciente</i>, pasa por el punto (0,0) y por cada unidad que avanza en x, la variable y sube 2 unidades.</p>
+        </div>
+      </div>
+
+      <!-- Pregunta 3 -->
+      <div class="question-card">
+        <span class="badge">Caso 3 • Pendiente Nula</span>
+        <p class="question-text">
+          Si la pendiente es nula (<b>m = 0</b>) y la ordenada al origen es <b>b = 4</b>, ¿cómo se representa la recta en el plano y cuál es su ecuación?
+        </p>
+        <button class="btn-toggle-answer" onclick="toggleAnswer('ans3')">
+          <span>👁️ Ver Respuesta</span>
+        </button>
+        <div id="ans3" class="answer-box hidden">
+          <p><b>Ecuación:</b> <code style="color:var(--uagro-blue)">y = 4</code> (dado que 0x + 4 = 4)</p>
+          <p><b>Comportamiento:</b> Es una recta <i>horizontal</i> a una altura constante de y = 4. No tiene inclinación alguna.</p>
+        </div>
+      </div>
+
+      <!-- Pregunta 4 -->
+      <div class="question-card">
+        <span class="badge">Caso 4 • Forma Punto-Pendiente</span>
+        <p class="question-text">
+          Dado el punto <b>A(2, 3)</b> y una pendiente <b>m = -2</b>, ¿cuál es la expresión correcta en la forma <b>(y - y₁) = m(x - x₁)</b>?
+        </p>
+        <button class="btn-toggle-answer" onclick="toggleAnswer('ans4')">
+          <span>👁️ Ver Respuesta</span>
+        </button>
+        <div id="ans4" class="answer-box hidden">
+          <p><b>Ecuación:</b> <code style="color:var(--uagro-blue)">(y - 3) = -2(x - 2)</code></p>
+          <p><b>Explicación:</b> Se sustituyen directamente x₁ = 2, y₁ = 3 y m = -2 en el modelo de la ecuación sin realizar despejes.</p>
+        </div>
+      </div>
+
+      <!-- Pregunta 5 -->
+      <div class="question-card">
+        <span class="badge">Caso 5 • Interpretación de Δy</span>
+        <p class="question-text">
+          En la Tabla de Valores, al aumentar x de 1 en 1, observas que la columna del cambio muestra constantemente <b>Δy = +3.5</b>. ¿Cuánto vale la pendiente <b>m</b>?
+        </p>
+        <button class="btn-toggle-answer" onclick="toggleAnswer('ans5')">
+          <span>👁️ Ver Respuesta</span>
+        </button>
+        <div id="ans5" class="answer-box hidden">
+          <p><b>Pendiente:</b> <code style="color:var(--uagro-blue)">m = 3.50</code></p>
+          <p><b>Explicación:</b> La pendiente m equivale numéricamente a la tasa de cambio vertical (Δy) cuando el incremento horizontal (Δx) es igual a 1.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <script>
     const canvas = document.getElementById('gridCanvas');
@@ -557,7 +778,6 @@
       const b = y1 - m * x1;
       tableBody.innerHTML = '';
 
-      // Generar 5 puntos enteros centrados alrededor del entero más cercano a x1
       const startX = Math.round(x1) - 2;
 
       for (let i = 0; i < 5; i++) {
@@ -565,7 +785,6 @@
         const currentY = m * currentX + b;
         const tr = document.createElement('tr');
 
-        // Resaltar la fila si coincide con el punto A(x1, y1)
         if (Math.abs(currentX - x1) < 0.1) {
           tr.style.backgroundColor = '#fef3c7';
           tr.style.fontWeight = 'bold';
@@ -659,6 +878,22 @@
       isDragging = false; 
       initialTouchDist = null;
     });
+
+    // LÓGICA DE INTERACCIÓN PARA MOSTRAR / OCULTAR RESPUESTAS
+    function toggleAnswer(id) {
+      const answerBox = document.getElementById(id);
+      const button = answerBox.previousElementSibling;
+      
+      if (answerBox.classList.contains('hidden')) {
+        answerBox.classList.remove('hidden');
+        button.innerHTML = '<span>🙈 Ocultar Respuesta</span>';
+        button.style.backgroundColor = '#64748b';
+      } else {
+        answerBox.classList.add('hidden');
+        button.innerHTML = '<span>👁️ Ver Respuesta</span>';
+        button.style.backgroundColor = 'var(--uagro-red)';
+      }
+    }
 
     updateScale();
     render();
